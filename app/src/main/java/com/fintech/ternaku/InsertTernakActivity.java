@@ -39,6 +39,7 @@ public class InsertTernakActivity extends AppCompatActivity {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(InsertTernakActivity.this);
         alertDialogBuilder.setView(promptView);
 
+         int a=0;
         final EditText editText = (EditText) promptView.findViewById(R.id.edtnamaternak);
 
         final InputMethodManager imgr = (InputMethodManager) InsertTernakActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
