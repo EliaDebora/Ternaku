@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -14,11 +15,13 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -89,6 +92,7 @@ public class MainActivity extends AppCompatActivity
         });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -97,6 +101,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View hView =  navigationView.getHeaderView(0);
+
+        navigationView.setNavigationItemSelectedListener(this);
+
         SharedPreferences sharedpreferences;
         sharedpreferences = getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE);
 
@@ -108,8 +115,6 @@ public class MainActivity extends AppCompatActivity
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(2);
         df.setMinimumIntegerDigits(0);
-
-
     }
 
     @Override
@@ -171,25 +176,36 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        /*switch (id)
+        {
+            case R.id.nav_search:
+                Toast.makeText(getApplicationContext(),"YEAYY", Toast.LENGTH_LONG).show();
+        }*/
 
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_search) {
+            Log.d("Drawer",String.valueOf(id));
+        } else if (id == R.id.nav_add) {
+            Intent i = new Intent(MainActivity.this, InsertTernakActivity.class);
+            startActivity(i);
+        } else if (id == R.id.nav_reminder) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_animal_list) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_scheduled) {
+
+        } else if (id == R.id.nav_today) {
 
         }
+        else {
+            Toast.makeText(getApplicationContext(),"YEAYY", Toast.LENGTH_LONG).show();
+        }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -260,7 +276,7 @@ public class MainActivity extends AppCompatActivity
     {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
          sectionedExpandableLayoutHelper = new SectionedExpandableLayoutHelper(this,
-                mRecyclerView, this, 3);
+                mRecyclerView, this, 2);
 
         char tmp = 0x00B0;
         DecimalFormat df = new DecimalFormat("###.###");
