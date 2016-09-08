@@ -9,10 +9,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.felipecsl.asymmetricgridview.library.Utils;
-import com.felipecsl.asymmetricgridview.library.model.AsymmetricItem;
-import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridView;
-import com.felipecsl.asymmetricgridview.library.widget.AsymmetricGridViewAdapter;
 import com.fintech.ternaku.adapters.ItemClickListener;
 import com.fintech.ternaku.adapters.Section;
 import com.fintech.ternaku.adapters.SectionedExpandableLayoutHelper;
