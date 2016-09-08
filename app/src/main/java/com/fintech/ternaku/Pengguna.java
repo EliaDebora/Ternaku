@@ -14,6 +14,7 @@ public class Pengguna {
     public Pengguna(){
 
     }
+
     // constructor
     public Pengguna(String idrole, String idpengguna, String nama, String alamat, String telpon, String username){
         this.set_idrole(idrole);
