@@ -28,6 +28,13 @@
     <string name="name">Fullname</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <!-- Strings related to Register -->
+    <string name="hint_email_register">Email Pengguna</string>
+    <string name="hint_nama_panjang">Nama Lengkap Pengguna</string>
+    <string name="hint_username">Nama Pengguna</string>
+    <string name="hint_nomor_telepon_pengguna">Nomor Telepon Pengguna</string>
+    <string name="hint_alamat_pengguna">Alamat Pengguna</string>
+
     <string name="open_weather_maps_app_id">190c84ac716456c2fb8ab504e3c695d7</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
