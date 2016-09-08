@@ -94,8 +94,6 @@ public class InsertTernakActivity extends AppCompatActivity {
 
         final InputMethodManager imgr = (InputMethodManager) InsertTernakActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
         imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
