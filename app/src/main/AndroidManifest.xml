@@ -33,6 +33,10 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".InsertTernakActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".TernakListActivity"
+            android:label="@string/title_activity_ternak_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
