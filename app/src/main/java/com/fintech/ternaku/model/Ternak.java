@@ -13,6 +13,8 @@ public class Ternak {
     private String tgl_subur;
     private String tgl_lahir;
     private String aktivitas;
+    private String jenis;
+    private String breed;
     private float max_susu;
     private float min_susu;
     private float avg_susu;
@@ -22,7 +24,7 @@ public class Ternak {
     public Ternak() {
 
     }
-    public Ternak(String id_ternak, String nama_ternak, float berat_badan, int hari_produksi_susu, String status_kesuburan, String diagnosis, String tgl_subur, String tgl_lahir, String aktivitas, float total_susu, float jml_susu) {
+    public Ternak(String id_ternak, String nama_ternak, float berat_badan, int hari_produksi_susu, String status_kesuburan, String diagnosis, String tgl_subur, String tgl_lahir, String aktivitas, String jenis, String breed, float total_susu, float jml_susu) {
         this.setId_ternak(id_ternak);
         this.setNama_ternak(nama_ternak);
         this.setBerat_badan(berat_badan);
@@ -37,6 +39,8 @@ public class Ternak {
         this.setAvg_susu(getAvg_susu());
         this.setTotal_susu(total_susu);
         this.setJml_susu(jml_susu);
+        this.setJenis(jenis);
+        this.setBreed(breed);
     }
 
     public String getId_ternak() {
@@ -149,5 +153,21 @@ public class Ternak {
 
     public void setJml_susu(float jml_susu) {
         this.jml_susu = jml_susu;
+    }
+
+    public String getJenis() {
+        return jenis;
+    }
+
+    public void setJenis(String jenis) {
+        this.jenis = jenis;
+    }
+
+    public String getBreed() {
+        return breed;
+    }
+
+    public void setBreed(String breed) {
+        this.breed = breed;
     }
 }

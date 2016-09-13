@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity
     {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
          sectionedExpandableLayoutHelper = new SectionedExpandableLayoutHelper(this,
-                mRecyclerView, this, 2);
+                mRecyclerView, this, 3);
 
         char tmp = 0x00B0;
         DecimalFormat df = new DecimalFormat("###.###");

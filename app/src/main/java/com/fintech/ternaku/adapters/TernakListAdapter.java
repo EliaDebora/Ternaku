@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,7 +40,7 @@ import java.util.List;
 /**
  * Created by YORIS on 9/9/16.
  */
-public class TernakListAdapter extends ArrayAdapter<Ternak> {
+public class TernakListAdapter extends ArrayAdapter<Ternak> implements Filterable{
     private Activity activity;
     private List<Ternak> ternak;
     private static LayoutInflater inflater=null;
@@ -202,10 +204,8 @@ public class TernakListAdapter extends ArrayAdapter<Ternak> {
                         isInProgress = false;
                         canReset = true;
                     }
-
                 }
             }
         }.start();
     }
-
 }
