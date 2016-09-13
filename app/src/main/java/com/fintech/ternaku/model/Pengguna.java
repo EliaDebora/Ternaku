@@ -1,4 +1,4 @@
-package com.fintech.ternaku;
+package com.fintech.ternaku.model;
 
 /**
  * Created by YORIS on 9/6/16.
