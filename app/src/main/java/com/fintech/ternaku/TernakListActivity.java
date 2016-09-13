@@ -11,10 +11,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ public class TernakListActivity extends AppCompatActivity {
     TernakListAdapter objAdapter;
     List<Ternak> ternakList = new ArrayList<Ternak>();
     ListView list;
+    EditText edtsearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +44,11 @@ public class TernakListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ternak_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         list = (ListView) findViewById(R.id.list);
+        edtsearch = (EditText)findViewById(R.id.edtSearch);
         String id_peternakan = getIntent().getExtras().getString("id_peternakan");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +59,27 @@ public class TernakListActivity extends AppCompatActivity {
             }
         });
 
+
+        edtsearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                //Your query to fetch Data
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    search(s.toString());
+                }
+            }
+        });
         String urlParameters = "uid="+getSharedPreferences(getString(R.string.userpref), Context.MODE_PRIVATE).getString("keyIdPengguna",null)+"&idpeternakan="+id_peternakan;
         new GetTernakTask().execute("http://ternaku.com/index.php/C_Ternak/getDetailTernakByUserId",urlParameters);
 
@@ -124,8 +151,10 @@ public class TernakListActivity extends AppCompatActivity {
                     ter.setStatus_kesuburan(jObj.getString("status_kesuburan"));
                     ter.setDiagnosis(jObj.getString("diagnosis"));
                     ter.setJml_susu(jObj.getLong("kapasitas"));
+                    ter.setJenis(jObj.getString("jenis"));
+                    ter.setBreed(jObj.getString("breed"));
 
-                    ternakList.add(ter);
+                ternakList.add(ter);
             }
             objAdapter = new TernakListAdapter(TernakListActivity.this, R.layout.list_row, ternakList);
             list.setAdapter(objAdapter);
@@ -142,5 +171,23 @@ public class TernakListActivity extends AppCompatActivity {
             });
         }
         catch (JSONException e){e.printStackTrace();}
+    }
+
+    public void search(String keyword)
+    {
+        Boolean diff = true;
+        List<Ternak> tempTernak  = new ArrayList<Ternak>();;
+        for(int i=0;i<ternakList.size();i++)
+        {
+            if(ternakList.get(i).getId_ternak().contains(keyword)||ternakList.get(i).getNama_ternak().contains(keyword)||ternakList.get(i).getJenis().contains(keyword)||ternakList.get(i).getBreed().contains(keyword))
+            {
+                tempTernak.add(ternakList.get(i));
+            }
+        }
+
+            objAdapter = new TernakListAdapter(TernakListActivity.this, R.layout.list_row, tempTernak);
+            list.setAdapter(objAdapter);
+            //objAdapter.notifyDataSetChanged();
+
     }
 }

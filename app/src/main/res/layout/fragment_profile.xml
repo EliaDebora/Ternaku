@@ -1,0 +1,165 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.fintech.ternaku.ProfileFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <Button
+        android:id="@+id/btnFertility"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ba1f04"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:paddingRight="10dp"
+        android:text="Fertility"
+        android:textColor="#fff"
+        android:layout_marginTop="20dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        android:id="@+id/fertilityLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#e74c3c"
+        android:padding="16dp"
+        app:ael_duration="400"
+        app:ael_expanded="false"
+        app:ael_interpolator="bounce"
+        app:ael_orientation="vertical"
+        android:layout_alignStart="@+id/btnProduction"
+        android:layout_below="@+id/btnFertility"
+        android:layout_alignEnd="@+id/btnProduction"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expandable Layout provides an easy way to create a view called header with an expandable view. Views are external layout to allow a maximum of customization." />
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+
+    <Button
+        android:id="@+id/btnProduction"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#f1c40f"
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:paddingRight="10dp"
+        android:text="Production"
+        android:textColor="#fff"
+        android:layout_below="@+id/fertilityLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        android:id="@+id/productionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#90ba1f04"
+        android:padding="16dp"
+        app:ael_duration="400"
+        app:ael_expanded="false"
+        app:ael_interpolator="bounce"
+        app:ael_orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_alignStart="@+id/btnProduction"
+        android:layout_below="@+id/btnProduction"
+        android:layout_alignEnd="@+id/btnProduction">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expandable Layout provides an easy way to create a view called header with an expandable view. Views are external layout to allow a maximum of customization." />
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+
+    <Button
+        android:id="@+id/btnHealth"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#16a085"
+
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:paddingRight="10dp"
+        android:text="Health"
+        android:textColor="#fff"
+        android:layout_below="@+id/productionLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        android:id="@+id/healthLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#16a085"
+        android:padding="16dp"
+        app:ael_duration="400"
+        app:ael_expanded="false"
+        app:ael_interpolator="bounce"
+        app:ael_orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_alignStart="@+id/btnHealth"
+        android:layout_below="@+id/btnHealth"
+        android:layout_alignEnd="@+id/btnHealth">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expandable Layout provides an easy way to create a view called header with an expandable view. Views are external layout to allow a maximum of customization." />
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+
+    <Button
+        android:id="@+id/btnGeneral"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#e67e22"
+
+        android:drawableRight="@android:drawable/arrow_down_float"
+        android:paddingRight="10dp"
+        android:text="General"
+        android:textColor="#fff"
+        android:layout_below="@+id/healthLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+        android:id="@+id/generalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#16a085"
+        android:padding="16dp"
+        app:ael_duration="400"
+        app:ael_expanded="false"
+        app:ael_interpolator="bounce"
+        app:ael_orientation="vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_alignStart="@+id/btnGeneral"
+        android:layout_below="@+id/btnGeneral"
+        android:layout_alignEnd="@+id/btnGeneral">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expandable Layout provides an easy way to create a view called header with an expandable view. Views are external layout to allow a maximum of customization." />
+    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+
+</RelativeLayout>
+</ScrollView>
