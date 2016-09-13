@@ -296,7 +296,6 @@ public class InsertTernakActivity extends AppCompatActivity {
                                 dialog.cancel();
                             }
                         });
-
         // create an alert dialog
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
