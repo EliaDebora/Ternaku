@@ -24,8 +24,6 @@ public class Connection {
             urlConnection = (HttpURLConnection) url
                     .openConnection();
             urlConnection.setRequestMethod("POST");
-
-
             urlConnection.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
 
