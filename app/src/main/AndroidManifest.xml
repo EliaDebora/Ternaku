@@ -33,7 +33,9 @@
         <activity android:name=".MainActivity" />
         <activity
             android:name=".InsertTernakActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ViewDetailTernakByQrCode" />
+        <activity android:name=".InsertSuccessTernakActivity"></activity>
     </application>
 
 </manifest>

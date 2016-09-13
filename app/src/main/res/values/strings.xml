@@ -35,6 +35,10 @@
     <string name="hint_nomor_telepon_pengguna">Nomor Telepon Pengguna</string>
     <string name="hint_alamat_pengguna">Alamat Pengguna</string>
 
+    <!-- Strings related to insert ternak -->
+    <string name="btn_insert_ternak">MASUKKAN DATA</string>
+    <string name="btn_cetak_barcode">CETAK BARCODE</string>
+
     <string name="open_weather_maps_app_id">190c84ac716456c2fb8ab504e3c695d7</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

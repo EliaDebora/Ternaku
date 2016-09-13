@@ -1,14 +1,22 @@
 package com.fintech.ternaku;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,16 +24,31 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.encoder.QRCode;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class InsertTernakActivity extends AppCompatActivity {
-    private TextView txtnama, txtbrt, txttgl;
-    float counter=10;
+    private TextView txtNama, txtBrt, txtTgl;
+    private Button btnTambah;
+    float counter=200;
+    private int flag_error_nama=0,flag_error_berat=0;
     private int year;
     private int month;
     private int day;
@@ -33,6 +56,12 @@ public class InsertTernakActivity extends AppCompatActivity {
     private DatePickerDialog fromDatePickerDialog;
     private DatePickerDialog toDatePickerDialog;
     private SimpleDateFormat dateFormatter;
+    private RadioGroup radioKelaminGroup;
+    private RadioButton radioKelamin;
+    private String generateId="";
+    private String pId="PETERNAKAN-1";
+    private String uId="USER-1";
+    private String QrCodeKey="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,31 +70,22 @@ public class InsertTernakActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        txtnama = (TextView)findViewById(R.id.nama_ternak);
-        txtbrt = (TextView)findViewById(R.id.berat_ternak);
-        txttgl = (TextView)findViewById(R.id.txtTgl);
+        txtNama = (TextView)findViewById(R.id.nama_ternak);
+        txtBrt = (TextView)findViewById(R.id.berat_ternak);
+        txtTgl = (TextView)findViewById(R.id.txtTgl);
 
         dateFormatter = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
 
-        txttgl.setText(dateFormatter.format(Calendar.getInstance().getTime()));
+        txtTgl.setText(dateFormatter.format(Calendar.getInstance().getTime()));
 
-        txtnama.setOnClickListener(new View.OnClickListener() {
+        txtNama.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showinputnama();
             }
         });
 
-        txtbrt.setOnClickListener(new View.OnClickListener() {
+        txtBrt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showinputberat();
@@ -73,13 +93,175 @@ public class InsertTernakActivity extends AppCompatActivity {
         });
         setDateTimeField();
 
-        txttgl.setOnClickListener(new View.OnClickListener() {
+        txtTgl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fromDatePickerDialog.show();
             }
         });
+
+        radioKelaminGroup = (RadioGroup) findViewById(R.id.radioSex);
+        btnTambah = (Button)findViewById(R.id.btnInsertTernak);
+        btnTambah.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Check input box---
+                if(txtNama.getText().toString().equalsIgnoreCase("Isikan nama ternak disini")||
+                        txtNama.getText().toString().equalsIgnoreCase("")) {
+                    txtNama.setError("Nama Ternak Belum diisi!!");
+                    flag_error_nama=1;
+                }else{
+                    flag_error_nama=0;
+                    txtNama.setError(null);
+                }
+                if(txtBrt.getText().toString().equalsIgnoreCase("Isikan berat ternak disini")||
+                        txtBrt.getText().toString().equalsIgnoreCase("")) {
+                    txtBrt.setError("Berat Ternak Belum diisi!!");
+                    flag_error_berat=1;
+                }else{
+                    flag_error_berat=0;
+                    txtBrt.setError(null);
+                }
+
+                if(flag_error_nama==0&&flag_error_berat==0) {
+                    //Generate Id Ternak--
+                    String urlParameters_count = "";
+                    new generateTernakTask().execute("http://ternaku.com/index.php/C_Ternak/countTernak", urlParameters_count);
+
+                }
+            }
+        });
     }
+
+    private void insertDB(){
+        Log.d("TAG_IdTernak",generateId.toString());
+
+        int selectedId=radioKelaminGroup.getCheckedRadioButtonId();
+        radioKelamin=(RadioButton) findViewById(selectedId);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
+        Date testDate = null;
+        try {
+            testDate = sdf.parse(txtTgl.getText().toString());
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String newFormat = formatter.format(testDate);
+        //Insert Database--
+        Log.d("TAG_INSERT",generateId.trim()+txtNama.getText().toString()+txtBrt.getText().toString()+
+                newFormat+radioKelamin.getText().toString());
+        String urlParameters = "idternak=" + generateId.trim()
+                +"&idpeternakan=" + pId.trim()
+                +"&namaternak=" + txtNama.getText().toString()
+                +"&jeniskelamin=" + radioKelamin.getText().toString()
+                +"&tanggallahirternak=" + newFormat;
+        new insertTernakTask().execute("http://ternaku.com/index.php/C_Ternak/insertTernak", urlParameters);
+
+    }
+
+    private void GenerateQrCodeId() {
+        //Qr Code Id Generator--
+        String urlParameters_qrcode = "idternak="+generateId.trim()+"&idpeternakan=" + pId.trim();
+        QrCodeKey ="http://ternaku.com/index.php/C_Ternak/getDetailTernakQrCde"+urlParameters_qrcode;
+        Log.d("TAG_GenerateQrCode", QrCodeKey);
+
+        //Insert Qr Code into Database
+        String urlParameters_insert_barcode ="idternak=" + generateId.trim()
+                +"&idpeternakan="+pId.trim()
+                +"&qrcodekey="+QrCodeKey.trim();
+        new generateQrCodeId().execute("http://ternaku.com/index.php/C_Ternak/insertKeyQrCode", urlParameters_insert_barcode);
+    }
+
+    private void GenerateQrCodePic() {
+        //Qr Code Pic Generator--
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(QrCodeKey, BarcodeFormat.QR_CODE,200,200);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+            Intent intent = new Intent(InsertTernakActivity.this, InsertSuccessTernakActivity.class);
+            intent.putExtra("picQrCode",bitmap);
+            startActivity(intent);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class generateQrCodeId extends AsyncTask<String,Integer,String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... set) {
+            Connection c = new Connection();
+            String json = c.GetJSONfromURL(set[0],set[1]);
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.d("RES_QrCodeId",s);
+            GenerateQrCodePic();
+        }
+    }
+
+    private class generateTernakTask extends AsyncTask<String,Integer,String>{
+        ProgressDialog progD;
+
+        @Override
+        protected void onPreExecute() {
+            progD = new ProgressDialog(InsertTernakActivity.this);
+            progD.setMessage("Generate Qr Code...");
+            progD.show();
+        }
+
+        @Override
+        protected String doInBackground(String... get) {
+            Connection c = new Connection();
+            String json = c.GetJSONfromURL(get[0],get[1]);
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.d("RES_Count",s);
+            generateId = "TRK" + s.toString();
+            insertDB();
+            progD.dismiss();
+        }
+    }
+
+    private class insertTernakTask extends AsyncTask<String,Integer,String>{
+        ProgressDialog progD;
+
+        @Override
+        protected void onPreExecute() {
+
+            progD = new ProgressDialog(InsertTernakActivity.this);
+            progD.setMessage("Generate Qr Code...");
+            progD.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            Connection c = new Connection();
+            String json = c.GetJSONfromURL(params[0],params[1]);
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.d("RES_Insert",result);
+            GenerateQrCodeId();
+            progD.dismiss();
+        }
+    }
+
 
     protected void showinputnama() {
 
@@ -94,13 +276,11 @@ public class InsertTernakActivity extends AppCompatActivity {
 
         final InputMethodManager imgr = (InputMethodManager) InsertTernakActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
         imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
-
         // setup a dialog window
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        txtnama.setText(editText.getText());
+                        txtNama.setText(editText.getText());
                         InputMethodManager imm = (InputMethodManager) getSystemService(
                                 INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
@@ -142,7 +322,7 @@ public class InsertTernakActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counter+=0.10;
+                counter+=1;
                 txtBerat.setGravity(Gravity.CENTER);
                 txtBerat.setText(String.valueOf(df.format(counter)));
             }
@@ -151,7 +331,7 @@ public class InsertTernakActivity extends AppCompatActivity {
         btnMin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                counter-=0.10;
+                counter-=1;
                 txtBerat.setGravity(Gravity.CENTER);
 
                 txtBerat.setText(String.valueOf(df.format(counter)));
@@ -166,7 +346,7 @@ public class InsertTernakActivity extends AppCompatActivity {
         alertDialogBuilder.setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        txtbrt.setText(txtBerat.getText());
+                        txtBrt.setText(txtBerat.getText());
                         /*InputMethodManager imm = (InputMethodManager) getSystemService(
                                 INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(txtBerat.getWindowToken(), 0);*/
@@ -202,7 +382,7 @@ public class InsertTernakActivity extends AppCompatActivity {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                txttgl.setText(dateFormatter.format(newDate.getTime()));
+                txtTgl.setText(dateFormatter.format(newDate.getTime()));
             }
 
         },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
