@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_reminder) {
 
         } else if (id == R.id.nav_animal_list) {
-            Intent i = new Intent(MainActivity.this, TernakListActivity.class);
+            Intent i = new Intent(MainActivity.this, ShowPeternakanActivity.class);
             startActivity(i);
 
         } else if (id == R.id.nav_scheduled) {
